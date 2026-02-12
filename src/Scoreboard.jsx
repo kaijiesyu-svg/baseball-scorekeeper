@@ -669,6 +669,16 @@ const BaseballScoreboard = () => {
   const fileInputRef = React.useRef(null);
   const [isPlaying, setIsPlaying] = React.useState(false); // 自動播放狀態
   
+  // 手機版面適配
+  const [activeTab, setActiveTab] = React.useState('scoreboard');
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // 紀錄展開/收合的狀態 (預設展開第 1 局)
   const [expandedInnings, setExpandedInnings] = React.useState({ 1: true });
 
@@ -807,11 +817,11 @@ const BaseballScoreboard = () => {
             />
           </div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}>
-          <button onClick={() => dispatch({ type: ACTIONS.START_GAME, payload: { userTeam: 'GUEST', ...setup } })} style={{ padding: '20px', fontSize: '1.2rem', cursor: 'pointer' }}>
+        <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'center', gap: '20px' }}>
+          <button onClick={() => dispatch({ type: ACTIONS.START_GAME, payload: { userTeam: 'GUEST', ...setup } })} style={{ padding: '20px', fontSize: '1.2rem', cursor: 'pointer', width: isMobile ? '100%' : 'auto' }}>
             先攻 (客隊 / Guest)
           </button>
-          <button onClick={() => dispatch({ type: ACTIONS.START_GAME, payload: { userTeam: 'HOME', ...setup } })} style={{ padding: '20px', fontSize: '1.2rem', cursor: 'pointer' }}>
+          <button onClick={() => dispatch({ type: ACTIONS.START_GAME, payload: { userTeam: 'HOME', ...setup } })} style={{ padding: '20px', fontSize: '1.2rem', cursor: 'pointer', width: isMobile ? '100%' : 'auto' }}>
             後攻 (主隊 / Home)
           </button>
         </div>
@@ -900,22 +910,22 @@ const BaseballScoreboard = () => {
           </table>
         </div>
 
-        <div style={{ textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '10px' }}>
+        <div style={{ textAlign: 'center', display: 'flex', flexDirection: isMobile ? 'column' : 'row', justifyContent: 'center', gap: '10px' }}>
           <button 
             onClick={() => dispatch({ type: ACTIONS.ADD_PLAYER })}
-            style={{ padding: '15px 20px', fontSize: '1.1rem', background: '#17a2b8', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+            style={{ padding: '15px 20px', fontSize: '1.1rem', background: '#17a2b8', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', width: isMobile ? '100%' : 'auto' }}
           >
             +1 增加打者
           </button>
           <button 
             onClick={() => dispatch({ type: ACTIONS.REMOVE_PLAYER })}
-            style={{ padding: '15px 20px', fontSize: '1.1rem', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+            style={{ padding: '15px 20px', fontSize: '1.1rem', background: '#dc3545', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', width: isMobile ? '100%' : 'auto' }}
           >
             -1 減少打者
           </button>
           <button 
             onClick={() => dispatch({ type: ACTIONS.CONFIRM_LINEUP })} 
-            style={{ padding: '15px 40px', fontSize: '1.2rem', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+            style={{ padding: '15px 40px', fontSize: '1.2rem', background: '#28a745', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', width: isMobile ? '100%' : 'auto' }}
           >
             確認打序並開始比賽
           </button>
@@ -925,10 +935,16 @@ const BaseballScoreboard = () => {
   }
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px', maxWidth: '1200px', margin: '0 auto', display: 'flex', gap: '20px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+    <div style={{ fontFamily: 'Arial, sans-serif', padding: isMobile ? '10px' : '20px', paddingBottom: isMobile ? '80px' : '20px', maxWidth: '1200px', margin: '0 auto', display: isMobile ? 'block' : 'flex', gap: '20px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+      {isMobile && (
+        <style>{`
+          button { min-height: 44px; touch-action: manipulation; }
+          input { min-height: 44px; }
+        `}</style>
+      )}
       
       {/* 左側：打序表 (Lineup) */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', flex: '1', minWidth: '250px' }}>
+      <div style={{ display: (isMobile && activeTab !== 'lineup') ? 'none' : 'flex', flexDirection: 'column', gap: '20px', flex: '1', minWidth: '250px', width: isMobile ? '100%' : 'auto' }}>
       <div style={{ flex: '1', minWidth: '250px', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden', background: 'white' }}>
         <div style={{ background: '#333', color: 'white', padding: '8px', textAlign: 'center', fontWeight: 'bold' }}>
           {state.userTeamName}打序
@@ -976,7 +992,7 @@ const BaseballScoreboard = () => {
       </div>
 
       {/* 中間：記分板主體 */}
-      <div style={{ flex: '2', minWidth: '350px', border: '1px solid #ccc', borderRadius: '8px', background: '#f9f9f9', padding: '20px' }}>
+      <div style={{ display: (isMobile && activeTab !== 'scoreboard') ? 'none' : 'block', flex: '2', minWidth: isMobile ? '100%' : '350px', width: isMobile ? '100%' : 'auto', border: '1px solid #ccc', borderRadius: '8px', background: '#f9f9f9', padding: '20px' }}>
       <h2 style={{ textAlign: 'center', marginTop: 0 }}>棒球記分板</h2>
       
       {/* 傳統記分板表格 (Line Score) */}
@@ -1135,7 +1151,7 @@ const BaseballScoreboard = () => {
       </div>
 
       {/* 右側：打擊紀錄 (History) */}
-      <div style={{ flex: '1', minWidth: '250px', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden', background: 'white', maxHeight: '600px', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: (isMobile && activeTab !== 'history') ? 'none' : 'flex', flex: '1', minWidth: '250px', width: isMobile ? '100%' : 'auto', border: '1px solid #ddd', borderRadius: '8px', overflow: 'hidden', background: 'white', maxHeight: isMobile ? 'none' : '600px', flexDirection: 'column' }}>
         <div style={{ background: '#333', color: 'white', padding: '8px', textAlign: 'center', fontWeight: 'bold' }}>
           打擊紀錄 (History)
         </div>
@@ -1184,6 +1200,21 @@ const BaseballScoreboard = () => {
           )}
         </div>
       </div>
+
+      {/* 手機版底部導航 */}
+      {isMobile && (
+        <div style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', height: '60px', background: 'white', borderTop: '1px solid #ccc', display: 'flex', zIndex: 1000, boxShadow: '0 -2px 10px rgba(0,0,0,0.1)' }}>
+          <button onClick={() => setActiveTab('lineup')} style={{ flex: 1, border: 'none', background: activeTab === 'lineup' ? '#e6f7ff' : 'transparent', color: activeTab === 'lineup' ? '#007bff' : '#666', fontWeight: 'bold', fontSize: '1rem' }}>
+            📝 打序
+          </button>
+          <button onClick={() => setActiveTab('scoreboard')} style={{ flex: 1, border: 'none', background: activeTab === 'scoreboard' ? '#e6f7ff' : 'transparent', color: activeTab === 'scoreboard' ? '#007bff' : '#666', fontWeight: 'bold', fontSize: '1rem' }}>
+            ⚾️ 記分
+          </button>
+          <button onClick={() => setActiveTab('history')} style={{ flex: 1, border: 'none', background: activeTab === 'history' ? '#e6f7ff' : 'transparent', color: activeTab === 'history' ? '#007bff' : '#666', fontWeight: 'bold', fontSize: '1rem' }}>
+            📜 紀錄
+          </button>
+        </div>
+      )}
 
     </div>
   );
