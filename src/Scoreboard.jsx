@@ -7,7 +7,7 @@ const PLAYER_NAMES = [
 ];
 
 // 0.1 板凳球員名單
-const BENCH_NAMES = ["林泓育", "陳鏞基", "郭嚴文", "林立", "陳晨威", "高宇杰", "岳東華"];
+const BENCH_NAMES = ["777", "666", "555", "444", "111", "222", "333"];
 const generateBench = () => BENCH_NAMES.map((name) => ({
   name,
   number: Math.floor(Math.random() * 99) + 1
