@@ -7,7 +7,7 @@ const PLAYER_NAMES = [
 ];
 
 // 0.1 板凳球員名單
-const BENCH_NAMES = ["777", "666", "555", "444", "111", "222", "333"];
+const BENCH_NAMES = ["林泓育", "陳鏞基", "郭嚴文", "林立", "陳晨威", "高宇杰", "岳東華"];
 const generateBench = () => BENCH_NAMES.map((name) => ({
   name,
   number: Math.floor(Math.random() * 99) + 1
@@ -935,11 +935,11 @@ const BaseballScoreboard = () => {
   }
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', padding: isMobile ? '10px' : '20px', paddingBottom: isMobile ? '80px' : '20px', maxWidth: '1200px', margin: '0 auto', display: isMobile ? 'block' : 'flex', gap: '20px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+    <div style={{ fontFamily: 'Arial, sans-serif', padding: isMobile ? '5px' : '20px', paddingBottom: isMobile ? '80px' : '20px', maxWidth: '1200px', margin: '0 auto', display: isMobile ? 'block' : 'flex', gap: '20px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
       {isMobile && (
         <style>{`
-          button { min-height: 44px; touch-action: manipulation; }
-          input { min-height: 44px; }
+          button { min-height: 40px; touch-action: manipulation; font-size: 0.9rem; padding: 2px 5px; }
+          input { min-height: 40px; }
         `}</style>
       )}
       
@@ -992,11 +992,11 @@ const BaseballScoreboard = () => {
       </div>
 
       {/* 中間：記分板主體 */}
-      <div style={{ display: (isMobile && activeTab !== 'scoreboard') ? 'none' : 'block', flex: '2', minWidth: isMobile ? '100%' : '350px', width: isMobile ? '100%' : 'auto', border: '1px solid #ccc', borderRadius: '8px', background: '#f9f9f9', padding: '20px' }}>
-      <h2 style={{ textAlign: 'center', marginTop: 0 }}>棒球記分板</h2>
+      <div style={{ display: (isMobile && activeTab !== 'scoreboard') ? 'none' : 'block', flex: '2', minWidth: isMobile ? '100%' : '350px', width: isMobile ? '100%' : 'auto', border: '1px solid #ccc', borderRadius: '8px', background: '#f9f9f9', padding: isMobile ? '10px' : '20px' }}>
+      {!isMobile && <h2 style={{ textAlign: 'center', marginTop: 0 }}>棒球記分板</h2>}
       
       {/* 傳統記分板表格 (Line Score) */}
-      <div style={{ overflowX: 'auto', marginBottom: '20px' }}>
+      <div style={{ overflowX: 'auto', marginBottom: isMobile ? '10px' : '20px' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'center', fontSize: '0.9rem' }}>
           <thead>
             <tr style={{ background: '#333', color: 'white' }}>
@@ -1034,22 +1034,22 @@ const BaseballScoreboard = () => {
       </div>
 
       {/* 比分顯示 */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px', background: '#f0f0f0', padding: '10px', borderRadius: '5px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: isMobile ? '10px' : '20px', background: '#f0f0f0', padding: isMobile ? '5px' : '10px', borderRadius: '5px' }}>
         <div style={{ textAlign: 'center' }}>
-          <h3>{guestName}</h3>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{state.guestScore}</div>
+          <h3 style={{ margin: '5px 0', fontSize: isMobile ? '1rem' : '1.17em' }}>{guestName}</h3>
+          <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: 'bold' }}>{state.guestScore}</div>
         </div>
         <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <div style={{ fontSize: '1.2rem' }}>{state.inning} 局{state.isTopInning ? '上' : '下'}</div>
+          <div style={{ fontSize: isMobile ? '1rem' : '1.2rem' }}>{state.inning} 局{state.isTopInning ? '上' : '下'}</div>
         </div>
         <div style={{ textAlign: 'center' }}>
-          <h3>{homeName}</h3>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{state.homeScore}</div>
+          <h3 style={{ margin: '5px 0', fontSize: isMobile ? '1rem' : '1.17em' }}>{homeName}</h3>
+          <div style={{ fontSize: isMobile ? '1.5rem' : '2rem', fontWeight: 'bold' }}>{state.homeScore}</div>
         </div>
       </div>
 
       {/* 中間區域：壘包與球數 */}
-      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', marginBottom: isMobile ? '10px' : '20px' }}>
         
         {/* 壘包顯示 (Diamond) */}
         <div style={{ position: 'relative', width: '100px', height: '100px' }}>
@@ -1088,7 +1088,7 @@ const BaseballScoreboard = () => {
       </div>
 
       {/* 操作按鈕 */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '8px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: isMobile ? '4px' : '8px' }}>
         <button onClick={() => dispatch({ type: ACTIONS.STRIKEOUT })}>三振 (SO)</button>
         <button onClick={() => dispatch({ type: ACTIONS.ADD_OUT })}>{state.selectedBase !== null ? '跑者出局 (Out)' : '出局 (Out)'}</button>
         <button onClick={() => dispatch({ type: ACTIONS.WALK })} style={{ gridColumn: 'span 2' }}>保送 (BB)</button>
@@ -1106,27 +1106,29 @@ const BaseballScoreboard = () => {
         <button onClick={() => dispatch({ type: ACTIONS.UNDO })} style={{ gridColumn: 'span 2', background: '#666', color: 'white' }}>↩️ 回到上一動 (Undo)</button>
         <button onClick={() => dispatch({ type: ACTIONS.REDO })} disabled={!state.futureStates?.length} style={{ gridColumn: 'span 2', background: '#666', color: 'white', opacity: !state.futureStates?.length ? 0.5 : 1 }}>重做 (Redo) ↪️</button>
         
-        {/* 播放控制區 */}
-        <div style={{ gridColumn: 'span 4', display: 'flex', gap: '5px', background: '#333', padding: '5px', borderRadius: '5px', marginTop: '10px' }}>
-          <button onClick={() => dispatch({ type: ACTIONS.JUMP_TO_START })} disabled={state.pastStates.length === 0} style={{ flex: 1, fontSize: '1.2rem', background: 'transparent', color: 'white' }} title="回到開始">
-            ⏮
-          </button>
-          <button onClick={() => dispatch({ type: ACTIONS.UNDO })} disabled={state.pastStates.length === 0} style={{ flex: 1, fontSize: '1.2rem', background: 'transparent', color: 'white' }} title="上一步">
-            ◀
-          </button>
-          <button onClick={() => setIsPlaying(!isPlaying)} style={{ flex: 2, fontSize: '1rem', background: isPlaying ? '#ff4d4f' : '#28a745', color: 'white' }}>
-            {isPlaying ? '⏸ 暫停' : '▶️ 播放比賽'}
-          </button>
-          <button onClick={() => dispatch({ type: ACTIONS.REDO })} disabled={!state.futureStates?.length} style={{ flex: 1, fontSize: '1.2rem', background: 'transparent', color: 'white' }} title="下一步">
-            ▶
-          </button>
-          {/* 這裡可以加一個 "到最後" 的按鈕，但邏輯比較簡單先省略 */}
-        </div>
-
-        <button onClick={() => dispatch({ type: ACTIONS.RESET_COUNT })} style={{ gridColumn: 'span 4', background: '#ddd', marginTop: '10px' }}>
+        <button onClick={() => dispatch({ type: ACTIONS.RESET_COUNT })} style={{ gridColumn: 'span 4', background: '#ddd', marginTop: isMobile ? '5px' : '10px' }}>
           下一位打者 (Reset Count)
         </button>
-        <button onClick={() => dispatch({ type: ACTIONS.RESET_GAME })} style={{ gridColumn: 'span 4', background: '#ffcccc' }}>
+
+        {/* 播放控制區 */}
+        <details style={{ gridColumn: 'span 4', marginTop: '5px', border: '1px solid #ddd', borderRadius: '5px', padding: '5px' }}>
+          <summary style={{ cursor: 'pointer', textAlign: 'center', padding: '5px', fontSize: '0.9rem', color: '#666' }}>更多功能 (重播/重置/匯出)</summary>
+          <div style={{ display: 'flex', gap: '5px', background: '#333', padding: '5px', borderRadius: '5px', marginTop: '5px', marginBottom: '10px' }}>
+            <button onClick={() => dispatch({ type: ACTIONS.JUMP_TO_START })} disabled={state.pastStates.length === 0} style={{ flex: 1, fontSize: '1.2rem', background: 'transparent', color: 'white' }} title="回到開始">
+              ⏮
+            </button>
+            <button onClick={() => dispatch({ type: ACTIONS.UNDO })} disabled={state.pastStates.length === 0} style={{ flex: 1, fontSize: '1.2rem', background: 'transparent', color: 'white' }} title="上一步">
+              ◀
+            </button>
+            <button onClick={() => setIsPlaying(!isPlaying)} style={{ flex: 2, fontSize: '1rem', background: isPlaying ? '#ff4d4f' : '#28a745', color: 'white' }}>
+              {isPlaying ? '⏸ 暫停' : '▶️ 播放'}
+            </button>
+            <button onClick={() => dispatch({ type: ACTIONS.REDO })} disabled={!state.futureStates?.length} style={{ flex: 1, fontSize: '1.2rem', background: 'transparent', color: 'white' }} title="下一步">
+              ▶
+            </button>
+          </div>
+
+        <button onClick={() => dispatch({ type: ACTIONS.RESET_GAME })} style={{ width: '100%', background: '#ffcccc', marginBottom: '10px' }}>
           重置比賽 (New Game)
         </button>
         
@@ -1147,6 +1149,7 @@ const BaseballScoreboard = () => {
             onChange={handleImport} 
           />
         </div>
+        </details>
       </div>
       </div>
 
